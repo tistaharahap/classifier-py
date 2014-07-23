@@ -77,7 +77,7 @@ class MemoryStore(BasicStore):
             probs = [log(item / self.db['wordcounts'][cat]) for item in probs if item is not None]
 
             for prob in probs:
-                scores[cat] += prob
+                scores[cat] += abs(prob)
 
         return scores
 
@@ -153,6 +153,6 @@ class RedisStore(BasicStore):
                      for item in probs if item is not None]
 
             for prob in probs:
-                scores[cat] += prob
+                scores[cat] += abs(prob)
 
         return scores

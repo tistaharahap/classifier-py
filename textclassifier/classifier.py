@@ -35,18 +35,22 @@ class NaiveBayesClassifier(object):
     def cat_scores(self, text):
         return self.store.cat_scores(text=text)
 
-    def classify(self, text, default_cat=None, verbose=False):
+    def classify(self, text, default_cat='uncategorized', verbose=False):
         max_prob = -1000000000.0
         best = None
 
         scores = self.cat_scores(text)
-        if verbose:
-            print scores
 
         for (cat, prob) in scores.iteritems():
+            if verbose:
+                print cat, prob
+
             if prob > max_prob:
                 max_prob = prob
                 best = cat
+
+        if verbose:
+            print "Best: %s" % best
 
         if not best:
             return default_cat
@@ -56,11 +60,7 @@ class NaiveBayesClassifier(object):
         else:
             threshold = 1.0
 
-        for (cat, prob) in scores.iteritems():
-            if cat == best:
-                break
-
-            if prob * threshold > max_prob:
-                return default_cat
+        if verbose:
+            print "Threshold: %s" % threshold
 
         return best

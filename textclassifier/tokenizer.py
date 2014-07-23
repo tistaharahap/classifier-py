@@ -12,6 +12,8 @@ class StopwordsTokenizer(WordTokenizer):
         stopwords.extend(nltk.corpus.stopwords.words('english'))
     except IOError:
         pass
+    except LookupError:
+        pass
 
     regx = [
         '(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?',

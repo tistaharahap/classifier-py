@@ -13,10 +13,28 @@ class TextClassifierTest(unittest.TestCase):
         with open('tests/trainingdata.txt', 'r') as f:
             data = [line for line in f]
             for line in data:
-                line = line.split(' ')
-                self.training_data.update({
-                    " ".join(line[1:]): line[0]
-                })
+                line = line.split('|')
+                if line[1:] and line[0]:
+                    self.training_data.update({
+                        " ".join(line[1:]): line[0]
+                    })
+
+class MemoryStoreTest(TextClassifierTest):
+
+    classifier = None
+
+    def setUp(self):
+        super(MemoryStoreTest, self).setUp()
+        self.classifier = NaiveBayesClassifier(store=MemoryStore(tokenizer=StopwordsTokenizer()),
+                                               train_set=self.training_data)
+
+    def test_train_data(self):
+        self.assertIsNone(self.classifier.train(self.training_data),
+                          msg='The train() method must return None')
+
+    def test_classify(self):
+        cls = self.classifier.classify('Van Gaal', verbose=True)
+        self.assertIsNotNone(cls, msg="Classifier classify must not return None")
 
 
 class RedisStoreTest(TextClassifierTest):
@@ -53,6 +71,5 @@ class RedisStoreTest(TextClassifierTest):
         self.assertIsNone(self.classifier.train(self.training_data), msg="The train() method must return None")
 
     def test_classify(self):
-        cls = self.classifier.classify('marcos lopes')
-        print cls
-        self.assertIsNone(cls, msg="Classifier classify must not return None")
+        cls = self.classifier.classify('Van Gaal', verbose=True)
+        self.assertIsNotNone(cls, msg="Classifier classify must not return None")
