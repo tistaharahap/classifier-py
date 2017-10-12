@@ -1,4 +1,4 @@
-from text.tokenizers import WordTokenizer
+from textblob.tokenizers import WordTokenizer
 from nltk.tokenize import RegexpTokenizer
 import re
 import nltk
